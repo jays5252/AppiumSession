@@ -1,0 +1,67 @@
+package com.app.Base;
+
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.time.Duration;
+
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.BeforeTest;
+
+import com.app.Utils.ReportHandling;
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.reporter.ExtentSparkReporter;
+
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.remote.MobileCapabilityType;
+import io.appium.java_client.remote.MobilePlatform;
+
+public class BaseClass 
+{
+	public AndroidDriver driver;
+
+    public ExtentReports report;
+    public ExtentTest test;
+
+//    @BeforeSuite
+//    public void setupReport()
+//    {
+//        ExtentSparkReporter sparkReporter = ReportHandling.TakeReport("../Appium/Test-Report/report.html");
+//        report = new ExtentReports();
+//        report.attachReporter(sparkReporter);
+//        // Removed createTest call here because testCaseName is no longer passed
+//    }
+
+	@BeforeTest
+	
+	public void LaunchApp() throws MalformedURLException
+	{
+		File app = new File("../Appium/apkFiles/ApiDemo.apk");
+		
+		//127.0.0.1:4723
+		DesiredCapabilities cap = new DesiredCapabilities();
+		cap.setCapability(MobileCapabilityType.PLATFORM_NAME, MobilePlatform.ANDROID);
+		cap.setCapability(MobileCapabilityType.DEVICE_NAME, "10AC8R126P000TV");
+		cap.setCapability(MobileCapabilityType.APP, app.getAbsolutePath());
+		driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), cap);
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+	}
+	
+	@AfterTest
+	
+	public void CloseApp()
+	{
+		if (driver != null) driver.quit();
+	}
+	
+//	@AfterSuite
+//	public void closeReport()
+//    {
+//        report.flush();
+//
+//    }
+}
