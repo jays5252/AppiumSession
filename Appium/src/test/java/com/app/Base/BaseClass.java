@@ -6,11 +6,13 @@ import java.net.URL;
 import java.time.Duration;
 
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.testng.ITestResult;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
-import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
-import org.testng.annotations.BeforeTest;
 
+import com.app.Assertions.Assertions;
 import com.app.Utils.ReportHandling;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
@@ -23,21 +25,18 @@ import io.appium.java_client.remote.MobilePlatform;
 public class BaseClass 
 {
 	public AndroidDriver driver;
-
     public ExtentReports report;
     public ExtentTest test;
 
-//    @BeforeSuite
-//    public void setupReport()
-//    {
-//        ExtentSparkReporter sparkReporter = ReportHandling.TakeReport("../Appium/Test-Report/report.html");
-//        report = new ExtentReports();
-//        report.attachReporter(sparkReporter);
-//        // Removed createTest call here because testCaseName is no longer passed
-//    }
+    @BeforeSuite
+    public void setupReport()
+    {
+        ExtentSparkReporter sparkReporter = ReportHandling.TakeReport("../Appium/Test-Report/report.html");
+        report = new ExtentReports();
+        report.attachReporter(sparkReporter);
+    }
 
-	@BeforeTest
-	
+	@BeforeMethod
 	public void LaunchApp() throws MalformedURLException
 	{
 		File app = new File("../Appium/apkFiles/General-Store.apk");
@@ -47,22 +46,41 @@ public class BaseClass
 		cap.setCapability(MobileCapabilityType.PLATFORM_NAME, MobilePlatform.ANDROID);
 		cap.setCapability(MobileCapabilityType.DEVICE_NAME, "10AC8R126P000TV");
 		cap.setCapability(MobileCapabilityType.APP, app.getAbsolutePath());
+		
+		// Add capability to reset app state between tests
+		cap.setCapability("noReset", false);
+		cap.setCapability("fullReset", false);
+		
 		driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), cap);
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
 	}
 	
-//	@AfterTest
-//	
-//	public void CloseApp()
-//	{
-//		//if (driver != null) driver.quit();
-//		driver.close();
-//	}
+	@AfterMethod
+	public void CloseApp(ITestResult result)
+	{
+		// Use Assertions utility for centralized test result handling
+		// Expected message will be retrieved from test context or passed via test method
+		String expectedMessage = getExpectedMessageFromContext(result);
+		Assertions.assertResult(result, test, expectedMessage);
+		
+		if (driver != null) {
+			driver.quit();
+		}
+	}
 	
-//	@AfterSuite
-//	public void closeReport()
-//    {
-//        report.flush();
-//
-//    }
+	/**
+	 * Method to retrieve expected message from test context
+	 * Override this method in test classes to provide custom expected messages
+	 */
+	protected String getExpectedMessageFromContext(ITestResult result) {
+		// Default implementation - can be overridden by test classes
+		// Test classes can use @Test annotation attributes or custom methods
+		return "Test should complete successfully";
+	}
+	
+	@AfterSuite
+	public void closeReport()
+    {
+        report.flush();
+    }
 }

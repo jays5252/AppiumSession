@@ -1,30 +1,19 @@
 package com.app.TestScripts;
 
 import static org.testng.Assert.assertEquals;
-
-import java.io.File;
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.time.Duration;
 import java.util.List;
-
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.annotations.Test;
-
 import com.app.Base.BaseClass;
-
 import io.appium.java_client.AppiumBy;
-import io.appium.java_client.android.AndroidDriver;
-import io.appium.java_client.remote.MobileCapabilityType;
-import io.appium.java_client.remote.MobilePlatform;
 
 public class GeneralStoreTestCases extends BaseClass 
 {
-	@Test(priority = 0)
+	@Test
 	public void TC_01() throws MalformedURLException
 	{
-
+		test = report.createTest("TC_01");
 		WebElement nameField = driver.findElement(AppiumBy.id("com.androidsample.generalstore:id/nameField"));
 		nameField.sendKeys("Jay");
 		
@@ -37,10 +26,10 @@ public class GeneralStoreTestCases extends BaseClass
 		
 		assertEquals(count, 10, "Products count should be 10");
 	}
-	@Test(priority = 0)
+	@Test
 	public void TC_02() throws MalformedURLException
 	{
-		
+		test = report.createTest("TC_02");
 		WebElement nameField = driver.findElement(AppiumBy.id("com.androidsample.generalstore:id/nameField"));
 		nameField.sendKeys("Jay");
 		
@@ -56,9 +45,10 @@ public class GeneralStoreTestCases extends BaseClass
 		WebElement cartProductElement = driver.findElement(AppiumBy.id("com.androidsample.generalstore:id/productName"));
 		assertEquals(cartProductElement.getText(), "Air Jordan 4 Retro");
 	}
-	@Test(priority = 1)
+	@Test
 	public void TC_03()
 	{
+		test = report.createTest("TC_03");
 		WebElement nameField = driver.findElement(AppiumBy.id("com.androidsample.generalstore:id/nameField"));
 		nameField.sendKeys("Jay");
 		
@@ -70,9 +60,5 @@ public class GeneralStoreTestCases extends BaseClass
 		
 		WebElement secondProductAddtoCardButton = driver.findElement(AppiumBy.androidUIAutomator("new UiSelector().text(\"ADD TO CART\")"));
 		secondProductAddtoCardButton.click();
-		
-		
-		
 	}
-
 }
