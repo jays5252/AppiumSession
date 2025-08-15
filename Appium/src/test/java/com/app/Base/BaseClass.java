@@ -44,7 +44,7 @@ public class BaseClass
 		//127.0.0.1:4723
 		DesiredCapabilities cap = new DesiredCapabilities();
 		cap.setCapability(MobileCapabilityType.PLATFORM_NAME, MobilePlatform.ANDROID);
-		cap.setCapability(MobileCapabilityType.DEVICE_NAME, "10AC8R126P000TV");
+		cap.setCapability(MobileCapabilityType.DEVICE_NAME, "R9ZW906ZATB");
 		cap.setCapability(MobileCapabilityType.APP, app.getAbsolutePath());
 		
 		// Add capability to reset app state between tests
@@ -60,23 +60,13 @@ public class BaseClass
 	{
 		// Use Assertions utility for centralized test result handling
 		// Expected message will be retrieved from test context or passed via test method
-		String expectedMessage = getExpectedMessageFromContext(result);
-		Assertions.assertResult(result, test, expectedMessage);
+		Assertions.assertResult(result, test);
 		
 		if (driver != null) {
 			driver.quit();
 		}
 	}
 	
-	/**
-	 * Method to retrieve expected message from test context
-	 * Override this method in test classes to provide custom expected messages
-	 */
-	protected String getExpectedMessageFromContext(ITestResult result) {
-		// Default implementation - can be overridden by test classes
-		// Test classes can use @Test annotation attributes or custom methods
-		return "Test should complete successfully";
-	}
 	
 	@AfterSuite
 	public void closeReport()

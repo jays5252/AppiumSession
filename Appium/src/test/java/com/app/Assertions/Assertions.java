@@ -7,18 +7,15 @@ import com.aventstack.extentreports.Status;
 
 public class Assertions 
 {
-    public static void assertResult(ITestResult result, ExtentTest test, String expectedResult)
+    public static void assertResult(ITestResult result, ExtentTest test)
     {
         if (result.getStatus() == ITestResult.SUCCESS) {
             test.log(Status.PASS, "Test Case Passed: " + result.getName());
-            test.log(Status.PASS, "Expected: " + expectedResult);
         } else if (result.getStatus() == ITestResult.FAILURE) {
             test.log(Status.FAIL, "Test Case Failed: " + result.getName());
-            test.log(Status.FAIL, "Expected: " + expectedResult);
             test.log(Status.FAIL, "Actual: " + result.getThrowable());
         } else if (result.getStatus() == ITestResult.SKIP) {
             test.log(Status.SKIP, "Test Case Skipped: " + result.getName());
-            test.log(Status.SKIP, "Expected: " + expectedResult);
         }
     }
 }
